@@ -1,5 +1,5 @@
 # Frends.Redis.SetValue
-Description what the Task will do.
+Task to set Redis value
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Build](https://github.com/FrendsPlatform/Frends.Redis/actions/workflows/SetValue_build_and_test_on_main.yml/badge.svg)](https://github.com/FrendsPlatform/Frends.Redis/actions)

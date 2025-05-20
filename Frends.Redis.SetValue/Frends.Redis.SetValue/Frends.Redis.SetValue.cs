@@ -35,5 +35,9 @@ public static class Redis
         {
             return ErrorHandler.Handle(ex, options.ThrowErrorOnFailure, options.ErrorMessageOnFailure);
         }
+        finally
+        {
+            redis?.Dispose();
+        }
     }
 }
