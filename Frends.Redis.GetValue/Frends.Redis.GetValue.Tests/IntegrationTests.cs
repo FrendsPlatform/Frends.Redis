@@ -91,6 +91,19 @@ public class IntegrationTests
     }
 
     [Test]
+    public void InvalidInputThrowsException()
+    {
+        // Arrange
+        input.Key = null;
+
+        // Act
+        AsyncTestDelegate action = async () => await Redis.GetValue(input, options, connection);
+
+        // Assert
+        Assert.ThrowsAsync<Exception>(action);
+    }
+
+    [Test]
     public void InvalidConnectionStringThrowsException()
     {
         // Arrange
@@ -114,7 +127,7 @@ public class IntegrationTests
 
         // Assert
         var ex = Assert.ThrowsAsync<Exception>(action);
-        Assert.That(ex.Message, Does.Contain("Default error message"));
+        Assert.That(ex.Message, Does.Contain("Error getting value from Redis"));
     }
 
     [Test]

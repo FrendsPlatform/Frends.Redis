@@ -21,5 +21,5 @@ public class Options
     /// </summary>
     /// <example>Task failed during execution</example>
     [DefaultValue("Default error message")]
-    public string ErrorMessageOnFailure { get; set; } = "Default error message";
+    public string ErrorMessageOnFailure { get; set; } = "Error getting value from Redis";
 }

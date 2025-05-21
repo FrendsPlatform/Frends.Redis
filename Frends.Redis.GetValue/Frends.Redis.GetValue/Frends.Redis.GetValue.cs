@@ -16,7 +16,7 @@ public static class Redis
 
     /// <summary>
     /// This is Task.
-    /// [Documentation](https://tasks.frends.com/tasks/frends-tasks/Frends.Redis.SetValue).
+    /// [Documentation](https://tasks.frends.com/tasks/frends-tasks/Frends.Redis.GetValue).
     /// </summary>
     /// <param name="input">Data to set.</param>
     /// <param name="options">Exception settings.</param>
@@ -26,6 +26,7 @@ public static class Redis
     {
         try
         {
+            if (string.IsNullOrEmpty(input.Key)) throw new ArgumentException("Key cannot be null or empty", nameof(input.Key));
             redis = await ConnectionMultiplexer.ConnectAsync(connection.ConnectionString);
             var db = redis.GetDatabase();
             var value = await db.StringGetAsync(input.Key);
@@ -36,6 +37,10 @@ public static class Redis
         catch (Exception ex)
         {
             return ErrorHandler.Handle(ex, options.ThrowErrorOnFailure, options.ErrorMessageOnFailure);
+        }
+        finally
+        {
+            redis?.Dispose();
         }
     }
 }
