@@ -2,8 +2,8 @@
 Task to check if a key exists
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Build](https://github.com/FrendsPlatform/Frends.Redis/actions/workflows/SetValue_build_and_test_on_main.yml/badge.svg)](https://github.com/FrendsPlatform/Frends.Redis/actions)
-![Coverage](https://app-github-custom-badges.azurewebsites.net/Badge?key=FrendsPlatform/Frends.Redis/Frends.Redis.SetValue|main)
+[![Build](https://github.com/FrendsPlatform/Frends.Redis/actions/workflows/KeyExists_build_and_test_on_main.yml/badge.svg)](https://github.com/FrendsPlatform/Frends.Redis/actions)
+![Coverage](https://app-github-custom-badges.azurewebsites.net/Badge?key=FrendsPlatform/Frends.Redis/Frends.Redis.KeyExists|main)
 
 ## Installing
 
