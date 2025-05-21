@@ -17,12 +17,12 @@ public static class Redis
     private static IConnectionMultiplexer redis;
 
     /// <summary>
-    /// This is Task.
+    /// This is Task to get keys from Redis.
     /// [Documentation](https://tasks.frends.com/tasks/frends-tasks/Frends.Redis.GetKeys).
     /// </summary>
     /// <param name="options">Exception settings.</param>
     /// <param name="connection">Connection info.</param>
-    /// <returns>Object { bool Success, Error error, string[] Keys keys }.</returns>
+    /// <returns>Object { bool Success, Error error, List<string> Keys keys }.</returns>
     public static async Task<Result> GetKeys([PropertyTab] Options options, [PropertyTab] Connection connection)
     {
         try

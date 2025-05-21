@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 /// <summary>
-/// Options class usually contains parameters that are required.
+/// Options class with settings for specific behaviour of task
 /// </summary>
 public class Options
 {
@@ -20,6 +20,6 @@ public class Options
     /// Message what will be used when error occurs
     /// </summary>
     /// <example>Task failed during execution</example>
-    [DefaultValue("Default error message")]
-    public string ErrorMessageOnFailure { get; set; } = "Default error message";
+    [DefaultValue("Error getting Keys from Redis")]
+    public string ErrorMessageOnFailure { get; set; } = "Error getting Keys from Redis";
 }

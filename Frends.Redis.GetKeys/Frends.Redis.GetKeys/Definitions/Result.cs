@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 
 /// <summary>
-/// Result class usually contains properties of the return object.
+/// Result class defines structure of return data from GetKeys task
 /// </summary>
 public class Result
 {
