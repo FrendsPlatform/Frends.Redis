@@ -129,7 +129,7 @@ public class IntegrationTests
 
         // Assert
         var ex = Assert.ThrowsAsync<Exception>(action);
-        Assert.That(ex.Message, Does.Contain("Default error message"));
+        Assert.That(ex.Message, Does.Contain("Error checking key from Redis."));
     }
 
     [Test]

@@ -19,13 +19,16 @@ public static class ErrorHandler
     {
         if (throwOnFailure)
         {
-            throw new Exception($"{errorMessage}\n{exception.Message}");
+            throw new Exception(errorMessage, exception);
         }
 
         return new Result(false, new Error
         {
-            Message = $"{errorMessage}\n{exception.Message}",
-            AdditionalInfo = exception,
+            Message = errorMessage,
+            AdditionalInfo = new
+            {
+                Exception = exception,
+            },
         });
     }
 }

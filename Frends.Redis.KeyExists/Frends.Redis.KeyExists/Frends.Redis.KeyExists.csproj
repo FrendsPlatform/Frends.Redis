@@ -11,7 +11,7 @@
 	  <PackageTags>Frends</PackageTags>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
 	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
-	  <Description>Task to set Redis value</Description>
+	  <Description>Task to check if Redis key exists</Description>
 	  <PackageProjectUrl>https://frends.com/</PackageProjectUrl>
 	  <RepositoryUrl>https://github.com/FrendsPlatform/Frends.Redis/tree/main/Frends.Redis.KeyExists</RepositoryUrl>
   </PropertyGroup>

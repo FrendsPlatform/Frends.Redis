@@ -15,10 +15,10 @@ public static class Redis
     private static IConnectionMultiplexer redis;
 
     /// <summary>
-    /// This is Task.
+    /// This is Task to check if Redis key exists.
     /// [Documentation](https://tasks.frends.com/tasks/frends-tasks/Frends.Redis.KeyExists).
     /// </summary>
-    /// <param name="input">Data to set.</param>
+    /// <param name="input">Data to check.</param>
     /// <param name="options">Exception settings.</param>
     /// <param name="connection">Connection info.</param>
     /// <returns>Object { bool Success, Error error }.</returns>
