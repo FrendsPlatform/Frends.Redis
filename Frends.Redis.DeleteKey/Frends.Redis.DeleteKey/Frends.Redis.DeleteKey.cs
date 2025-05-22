@@ -8,7 +8,7 @@ using Helpers;
 using StackExchange.Redis;
 
 /// <summary>
-/// Main class of the Task.
+/// Main class of the Task to delete Key from Redis database.
 /// </summary>
 public static class Redis
 {

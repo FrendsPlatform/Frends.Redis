@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 public class Input
 {
     /// <summary>
-    /// Key to set
+    /// Key to delete
     /// </summary>
     /// <example>Foo</example>
     [DisplayFormat(DataFormatString = "Text")]

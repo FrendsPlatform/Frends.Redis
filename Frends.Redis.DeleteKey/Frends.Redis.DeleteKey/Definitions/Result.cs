@@ -1,7 +1,7 @@
 ﻿namespace Frends.Redis.DeleteKey.Definitions;
 
 /// <summary>
-/// Result class usually contains properties of the return object.
+/// Result class with info if key was successfully deleted.
 /// </summary>
 public class Result
 {

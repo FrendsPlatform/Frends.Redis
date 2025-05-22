@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 /// <summary>
-/// Options class usually contains parameters that are required.
+/// Option class to specify behavior of the Task.
 /// </summary>
 public class Options
 {

@@ -13,5 +13,5 @@ public class Error
     /// <summary>
     /// Object with additional information
     /// </summary>
-    public object AdditionalInfo { get; set; }
+    public dynamic AdditionalInfo { get; set; }
 }
