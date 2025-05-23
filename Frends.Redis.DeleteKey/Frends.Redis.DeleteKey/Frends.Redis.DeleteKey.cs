@@ -15,7 +15,7 @@ public static class Redis
     private static IConnectionMultiplexer redis;
 
     /// <summary>
-    /// This is Task.
+    /// This is Task do delete key from Redis database.
     /// [Documentation](https://tasks.frends.com/tasks/frends-tasks/Frends.Redis.DeleteKey).
     /// </summary>
     /// <param name="input">Data to set.</param>
