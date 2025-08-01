@@ -20,6 +20,6 @@ public class Options
     /// Message what will be used when error occurs
     /// </summary>
     /// <example>Task failed during execution</example>
-    [DefaultValue("Default error message")]
-    public string ErrorMessageOnFailure { get; set; } = "Default error message";
+    [DefaultValue("")]
+    public string ErrorMessageOnFailure { get; set; }
 }

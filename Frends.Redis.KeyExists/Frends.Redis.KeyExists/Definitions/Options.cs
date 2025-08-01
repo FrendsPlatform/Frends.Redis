@@ -20,6 +20,6 @@ public class Options
     /// Message what will be used when an error occurs
     /// </summary>
     /// <example>Task failed during execution</example>
-    [DefaultValue("Error checking key from Redis.")]
-    public string ErrorMessageOnFailure { get; set; } = "Error checking key from Redis.";
+    [DefaultValue("")]
+    public string ErrorMessageOnFailure { get; set; }
 }

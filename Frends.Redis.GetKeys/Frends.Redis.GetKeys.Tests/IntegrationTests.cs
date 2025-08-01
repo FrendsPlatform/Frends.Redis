@@ -110,20 +110,6 @@ public class IntegrationTests
     }
 
     [Test]
-    public void DefaultErrorMessageIsUsed()
-    {
-        // Arrange
-        connection.ConnectionString = "invalid-connection-string";
-
-        // Act
-        AsyncTestDelegate action = async () => await Redis.GetKeys(options, connection);
-
-        // Assert
-        var ex = Assert.ThrowsAsync<Exception>(action);
-        Assert.That(ex.Message, Does.Contain("Error getting Keys from Redis"));
-    }
-
-    [Test]
     public void CustomErrorMessageIsUsed()
     {
         // Arrange
