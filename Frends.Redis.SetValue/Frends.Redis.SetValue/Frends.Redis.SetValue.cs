@@ -1,43 +1,48 @@
-﻿namespace Frends.Redis.SetValue;
-
-using System;
+﻿using System;
 using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
-using Definitions;
-using Helpers;
+using Frends.Redis.SetValue.Definitions;
+using Frends.Redis.SetValue.Helpers;
 using StackExchange.Redis;
+
+namespace Frends.Redis.SetValue;
 
 /// <summary>
 /// Main class of the Task.
 /// </summary>
 public static class Redis
 {
-    private static IConnectionMultiplexer redis;
+    // private static IConnectionMultiplexer redis;
 
     /// <summary>
     /// This is Task.
     /// [Documentation](https://tasks.frends.com/tasks/frends-tasks/Frends.Redis.SetValue).
     /// </summary>
     /// <param name="input">Data to set.</param>
-    /// <param name="options">Exception settings.</param>
     /// <param name="connection">Connection info.</param>
+    /// <param name="options">Exception settings.</param>
+    /// <param name="cancellationToken">A cancellation token provided by Frends Platform.</param>
     /// <returns>Object { bool Success, Error error }.</returns>
-    public static async Task<Result> SetValue([PropertyTab] Input input, [PropertyTab] Options options, [PropertyTab] Connection connection)
+    public static async Task<Result> SetValue(
+        [PropertyTab] Input input,
+        [PropertyTab] Connection connection,
+        [PropertyTab] Options options,
+        CancellationToken cancellationToken = default)
     {
         try
         {
-            redis = await ConnectionMultiplexer.ConnectAsync(connection.ConnectionString);
+            input.Validate();
+            await using var redis = await ConnectionMultiplexer.ConnectAsync(connection.ConnectionString);
             var db = redis.GetDatabase();
-            await db.StringSetAsync(input.Key, input.Value, input.ExpiryInSeconds is null ? null : TimeSpan.FromSeconds(input.ExpiryInSeconds.Value));
+            cancellationToken.ThrowIfCancellationRequested();
+            await db.SetValue(input);
+
             return new Result();
         }
         catch (Exception ex)
         {
             return ErrorHandler.Handle(ex, options.ThrowErrorOnFailure, options.ErrorMessageOnFailure);
-        }
-        finally
-        {
-            redis?.Dispose();
         }
     }
 }

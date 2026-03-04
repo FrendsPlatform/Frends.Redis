@@ -18,7 +18,8 @@ public class Result
     public bool Success { get; private set; }
 
     /// <summary>
-    /// Error info
+    /// Error that occurred during task execution.
     /// </summary>
-    public Error Error { get; private set; }
+    /// <example>object { string Message, Exception AdditionalInfo }</example>
+    public Error Error { get; set; }
 }

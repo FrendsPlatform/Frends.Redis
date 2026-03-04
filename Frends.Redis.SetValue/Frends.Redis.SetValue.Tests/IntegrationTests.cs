@@ -1,11 +1,14 @@
-namespace Frends.Redis.SetValue.Tests;
-
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Definitions;
+using Frends.Redis.SetValue.Definitions;
+using NUnit.Framework;
 using StackExchange.Redis;
 using Testcontainers.Redis;
-using NUnit.Framework;
+using ValueType = Frends.Redis.SetValue.Definitions.ValueType;
+
+namespace Frends.Redis.SetValue.Tests;
 
 [TestFixture]
 public class IntegrationTests
@@ -30,7 +33,10 @@ public class IntegrationTests
 
         redis = await ConnectionMultiplexer.ConnectAsync(new ConfigurationOptions
         {
-            EndPoints = { connectionString },
+            EndPoints =
+            {
+                connectionString,
+            },
             AllowAdmin = true,
         });
     }
@@ -46,7 +52,7 @@ public class IntegrationTests
         input = new Input
         {
             Key = "test-key",
-            Value = "test-value",
+            StringValue = "test-value",
         };
 
         options = new Options
@@ -74,19 +80,96 @@ public class IntegrationTests
     }
 
     [Test]
-    public async Task SetValueIsSuccessful()
+    public async Task SetStringValueIsSuccessful()
     {
         // Arrange
         var db = redis.GetDatabase();
 
         // Act
-        var result = await Redis.SetValue(input, options, connection);
+        var result = await Redis.SetValue(input, connection, options);
 
         // Assert
         var savedValue = await db.StringGetAsync(input.Key);
         Assert.That(result.Success, Is.True);
         Assert.IsNull(result.Error);
-        Assert.That(input.Value, Is.EqualTo(savedValue.ToString()));
+        Assert.That(input.StringValue, Is.EqualTo(savedValue.ToString()));
+    }
+
+    [Test]
+    public async Task SetHashValueIsSuccessful()
+    {
+        // Arrange
+        var db = redis.GetDatabase();
+        var testVal = new Dictionary<string, string>
+        {
+            {
+                "Foo", "Bar"
+            },
+            {
+                "Moo", "Baz"
+            },
+        };
+        var entries = testVal.Select(x => new HashEntry(x.Key, x.Value)).ToArray();
+        input.HashValue = testVal;
+        input.ValueType = ValueType.Hash;
+
+        // Act
+        var result = await Redis.SetValue(input, connection, options);
+
+        // Assert
+        var savedValue = await db.HashGetAllAsync(input.Key);
+        Assert.That(result.Success, Is.True);
+        Assert.IsNull(result.Error);
+        Assert.That(entries, Is.EquivalentTo(savedValue));
+    }
+
+    [Test]
+    public async Task SetListValueIsSuccessful()
+    {
+        // Arrange
+        var db = redis.GetDatabase();
+        var testVal = new List<string>
+        {
+            "foo",
+            "foo",
+        };
+        var entries = testVal.Select(x => (RedisValue)x).ToArray();
+        input.ListValue = testVal;
+        input.ValueType = ValueType.List;
+
+        // Act
+        var result = await Redis.SetValue(input, connection, options);
+
+        // Assert
+        var savedValue = await db.ListRangeAsync(input.Key);
+        Assert.That(result.Success, Is.True);
+        Assert.IsNull(result.Error);
+        Assert.That(entries, Is.EquivalentTo(savedValue));
+    }
+
+    [Test]
+    public async Task SetSetValueIsSuccessful()
+    {
+        // Arrange
+        var db = redis.GetDatabase();
+        var testVal = new List<string>
+        {
+            "foo",
+            "foo",
+        };
+        var entries = testVal.Distinct().Select(x => (RedisValue)x).ToArray();
+
+        input.ListValue = testVal;
+        input.ValueType = ValueType.Set;
+
+        // Act
+        var result = await Redis.SetValue(input, connection, options);
+
+        // Assert
+        var savedValue = await db.SetMembersAsync(input.Key);
+        Assert.That(result.Success, Is.True);
+        Assert.IsNull(result.Error);
+        Assert.That(entries, Is.EquivalentTo(savedValue));
     }
 
     [Test]
@@ -97,7 +180,7 @@ public class IntegrationTests
         input.ExpiryInSeconds = 2;
 
         // Act
-        var result = await Redis.SetValue(input, options, connection);
+        var result = await Redis.SetValue(input, connection, options);
 
         // Assert
         await Task.Delay(TimeSpan.FromSeconds(3));
@@ -113,13 +196,10 @@ public class IntegrationTests
         // Arrange
         var db = redis.GetDatabase();
         connection.ConnectionString = "invalid-connection-string";
-
-        // Act
-        AsyncTestDelegate action = async () => await Redis.SetValue(input, options, connection);
-
-        // Assert
         var savedValue = await db.StringGetAsync(input.Key);
-        Assert.ThrowsAsync<Exception>(action);
+
+        // Act & Assert
+        Assert.ThrowsAsync<Exception>(async () => await Redis.SetValue(input, connection, options));
         Assert.IsFalse(savedValue.HasValue);
     }
 
@@ -131,11 +211,8 @@ public class IntegrationTests
         connection.ConnectionString = "invalid-connection-string";
         options.ErrorMessageOnFailure = message;
 
-        // Act
-        AsyncTestDelegate action = async () => await Redis.SetValue(input, options, connection);
-
-        // Assert
-        var ex = Assert.ThrowsAsync<Exception>(action);
+        // Act & Assert
+        var ex = Assert.ThrowsAsync<Exception>(async () => await Redis.SetValue(input, connection, options));
         Assert.That(ex.Message, Does.Contain(message));
     }
 
@@ -146,11 +223,8 @@ public class IntegrationTests
         connection.ConnectionString = "invalid-connection-string";
         options.ThrowErrorOnFailure = true;
 
-        // Act
-        AsyncTestDelegate action = async () => await Redis.SetValue(input, options, connection);
-
-        // Assert
-        Assert.ThrowsAsync<Exception>(action);
+        // Act & Assert
+        Assert.ThrowsAsync<Exception>(async () => await Redis.SetValue(input, connection, options));
     }
 
     [Test]
@@ -161,7 +235,7 @@ public class IntegrationTests
         options.ThrowErrorOnFailure = false;
 
         // Act
-        var result = await Redis.SetValue(input, options, connection);
+        var result = await Redis.SetValue(input, connection, options);
 
         // Assert
         Assert.IsFalse(result.Success);
