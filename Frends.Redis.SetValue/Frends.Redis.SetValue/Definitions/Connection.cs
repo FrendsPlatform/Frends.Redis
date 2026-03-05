@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace Frends.Redis.SetValue.Definitions;
 
 using System.ComponentModel.DataAnnotations;
@@ -7,6 +9,13 @@ using System.ComponentModel.DataAnnotations;
 /// </summary>
 public class Connection
 {
+    /// <summary>
+    /// Method to use to connect to Redis
+    /// </summary>
+    /// <example>ConnectionMethod.SimpleConnectionString</example>
+    [DefaultValue(ConnectionMethod.SimpleConnectionString)]
+    public ConnectionMethod ConnectionMethod { get; set; } = ConnectionMethod.SimpleConnectionString;
+
     /// <summary>
     /// Connection string to Redis.
     /// </summary>

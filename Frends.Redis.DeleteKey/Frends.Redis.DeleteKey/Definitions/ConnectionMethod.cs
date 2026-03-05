@@ -1,4 +1,4 @@
-﻿namespace Frends.Redis.GetValue.Definitions;
+﻿namespace Frends.Redis.DeleteKey.Definitions;
 
 /// <summary>
 /// Method to use to connect to Redis

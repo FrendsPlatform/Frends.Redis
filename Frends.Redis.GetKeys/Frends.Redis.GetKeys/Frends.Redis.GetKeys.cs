@@ -1,4 +1,6 @@
-﻿namespace Frends.Redis.GetKeys;
+﻿using Frends.Redis.GetValue.Helpers;
+
+namespace Frends.Redis.GetKeys;
 
 using System;
 using System.Collections.Generic;
@@ -14,8 +16,6 @@ using StackExchange.Redis;
 /// </summary>
 public static class Redis
 {
-    private static IConnectionMultiplexer redis;
-
     /// <summary>
     /// This is Task to get keys from Redis.
     /// [Documentation](https://tasks.frends.com/tasks/frends-tasks/Frends.Redis.GetKeys).
@@ -27,8 +27,9 @@ public static class Redis
     {
         try
         {
+            connection.Validate();
+            await using var redis = await ConnectionHandler.GetConnectionAsync(connection).ConfigureAwait(false);
             List<string> keys = [];
-            redis = await ConnectionMultiplexer.ConnectAsync(connection.ConnectionString);
             var server = redis.GetServer(connection.ConnectionString);
             keys.AddRange(server.Keys().Select(key => (string)key));
             return new Result(keys);
@@ -36,10 +37,6 @@ public static class Redis
         catch (Exception ex)
         {
             return ErrorHandler.Handle(ex, options.ThrowErrorOnFailure, options.ErrorMessageOnFailure);
-        }
-        finally
-        {
-            redis?.Dispose();
         }
     }
 }

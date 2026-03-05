@@ -5,15 +5,12 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using Definitions;
 using Helpers;
-using StackExchange.Redis;
 
 /// <summary>
 /// Main class of the Task to delete Key from Redis database.
 /// </summary>
 public static class Redis
 {
-    private static IConnectionMultiplexer redis;
-
     /// <summary>
     /// This is Task do delete key from Redis database.
     /// [Documentation](https://tasks.frends.com/tasks/frends-tasks/Frends.Redis.DeleteKey).
@@ -22,11 +19,17 @@ public static class Redis
     /// <param name="options">Exception settings.</param>
     /// <param name="connection">Connection info.</param>
     /// <returns>Object { bool Success, Error error }.</returns>
-    public static async Task<Result> DeleteKey([PropertyTab] Input input, [PropertyTab] Options options, [PropertyTab] Connection connection)
+    public static async Task<Result> DeleteKey(
+        [PropertyTab] Input input,
+        [PropertyTab] Options options,
+        [PropertyTab] Connection connection)
     {
         try
         {
-            redis = await ConnectionMultiplexer.ConnectAsync(connection.ConnectionString);
+            connection.Validate();
+            input.Validate();
+
+            await using var redis = await ConnectionHandler.GetConnectionAsync(connection).ConfigureAwait(false);
             var db = redis.GetDatabase();
             var deleted = await db.KeyDeleteAsync(input.Key);
             return new Result(deleted);
@@ -34,10 +37,6 @@ public static class Redis
         catch (Exception ex)
         {
             return ErrorHandler.Handle(ex, options.ThrowErrorOnFailure, options.ErrorMessageOnFailure);
-        }
-        finally
-        {
-            redis?.Dispose();
         }
     }
 }

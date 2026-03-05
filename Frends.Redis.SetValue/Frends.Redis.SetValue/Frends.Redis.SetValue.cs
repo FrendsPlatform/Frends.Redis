@@ -13,8 +13,6 @@ namespace Frends.Redis.SetValue;
 /// </summary>
 public static class Redis
 {
-    // private static IConnectionMultiplexer redis;
-
     /// <summary>
     /// This is Task.
     /// [Documentation](https://tasks.frends.com/tasks/frends-tasks/Frends.Redis.SetValue).
@@ -33,8 +31,9 @@ public static class Redis
         try
         {
             input.Validate();
+            connection.Validate();
             await using var redis =
-                await ConnectionMultiplexer.ConnectAsync(connection.ConnectionString).ConfigureAwait(false);
+                await ConnectionHandler.GetConnectionAsync(connection).ConfigureAwait(false);
             var db = redis.GetDatabase();
             cancellationToken.ThrowIfCancellationRequested();
             await db.SetValue(input).ConfigureAwait(false);

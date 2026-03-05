@@ -13,8 +13,6 @@ using StackExchange.Redis;
 /// </summary>
 public static class Redis
 {
-    private static IConnectionMultiplexer redis;
-
     /// <summary>
     /// This is Task.
     /// [Documentation](https://tasks.frends.com/tasks/frends-tasks/Frends.Redis.GetValue).
@@ -33,7 +31,7 @@ public static class Redis
             connection.Validate();
             input.Validate();
 
-            redis = await ConnectionHandler.GetConnectionAsync(connection).ConfigureAwait(false);
+            await using var redis = await ConnectionHandler.GetConnectionAsync(connection).ConfigureAwait(false);
             var db = redis.GetDatabase();
             RedisType type = await db.KeyTypeAsync(input.Key);
 
@@ -67,10 +65,6 @@ public static class Redis
         catch (Exception ex)
         {
             return ErrorHandler.Handle(ex, options.ThrowErrorOnFailure, options.ErrorMessageOnFailure);
-        }
-        finally
-        {
-            redis?.Dispose();
         }
     }
 }

@@ -21,6 +21,7 @@ internal static class Validator
 
     internal static void Validate(this Connection connection)
     {
-        // TODO Connection validation
+        if (string.IsNullOrEmpty(connection.ConnectionString))
+            throw new ArgumentException("Connection string cannot be null or empty", nameof(connection));
     }
 }
