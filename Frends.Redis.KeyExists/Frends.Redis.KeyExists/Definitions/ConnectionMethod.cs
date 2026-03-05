@@ -6,7 +6,7 @@
 public enum ConnectionMethod
 {
     /// <summary>
-    /// Using basic connection string with all credentials needed innit
+    /// Using basic connection string with all required credentials
     /// </summary>
     SimpleConnectionString = 1,
 
