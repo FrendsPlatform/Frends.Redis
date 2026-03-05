@@ -33,18 +33,32 @@ public class IntegrationTests
 
         redis = await ConnectionMultiplexer.ConnectAsync(new ConfigurationOptions
         {
-            EndPoints = { connectionString, }, AllowAdmin = true,
+            EndPoints =
+            {
+                connectionString,
+            },
+            AllowAdmin = true,
         });
     }
 
     [SetUp]
     public void Setup()
     {
-        connection = new Connection { ConnectionString = connectionString, };
+        connection = new Connection
+        {
+            ConnectionString = connectionString,
+        };
 
-        input = new Input { Key = "test-key", StringValue = "test-value", };
+        input = new Input
+        {
+            Key = "test-key",
+            StringValue = "test-value",
+        };
 
-        options = new Options { ThrowErrorOnFailure = true, };
+        options = new Options
+        {
+            ThrowErrorOnFailure = true,
+        };
 
         var server = redis.GetServer(connectionString);
         server.FlushAllDatabases();
@@ -86,7 +100,11 @@ public class IntegrationTests
     {
         // Arrange
         var db = redis.GetDatabase();
-        var testVal = new Dictionary<string, string> { { "Foo", "Bar" }, { "Moo", "Baz" }, };
+        var testVal = new Dictionary<string, string>
+        {
+            { "Foo", "Bar" },
+            { "Moo", "Baz" },
+        };
         var entries = testVal.Select(x => new HashEntry(x.Key, x.Value)).ToArray();
         input.HashValue = testVal;
         input.ValueType = ValueType.Hash;
@@ -106,7 +124,11 @@ public class IntegrationTests
     {
         // Arrange
         var db = redis.GetDatabase();
-        var testVal = new List<string> { "foo", "foo", };
+        var testVal = new List<string>
+        {
+            "foo",
+            "foo",
+        };
         var entries = testVal.Select(x => (RedisValue)x).ToArray();
         input.ListValue = testVal;
         input.ValueType = ValueType.List;
@@ -126,7 +148,11 @@ public class IntegrationTests
     {
         // Arrange
         var db = redis.GetDatabase();
-        var testVal = new List<string> { "foo", "foo", };
+        var testVal = new List<string>
+        {
+            "foo",
+            "foo",
+        };
         var entries = testVal.Distinct().Select(x => (RedisValue)x).ToArray();
 
         input.ListValue = testVal;
@@ -147,8 +173,18 @@ public class IntegrationTests
     {
         // Arrange
         var db = redis.GetDatabase();
-        var testVal = new List<string> { "foo", "foo" };
-        var expected = new List<string> { "foo", "foo", "foo", "foo" };
+        var testVal = new List<string>
+        {
+            "foo",
+            "foo"
+        };
+        var expected = new List<string>
+        {
+            "foo",
+            "foo",
+            "foo",
+            "foo"
+        };
         var entries = expected.Select(x => (RedisValue)x).ToArray();
         input.ListValue = testVal;
         input.ValueType = ValueType.List;
@@ -170,8 +206,16 @@ public class IntegrationTests
     {
         // Arrange
         var db = redis.GetDatabase();
-        var testVal = new List<string> { "foo1", "fo2" };
-        var expected = new List<string> { "foo3", "fo4" };
+        var testVal = new List<string>
+        {
+            "foo1",
+            "fo2"
+        };
+        var expected = new List<string>
+        {
+            "foo3",
+            "fo4"
+        };
         var entries = expected.Select(x => (RedisValue)x).ToArray();
         input.ListValue = testVal;
         input.ValueType = ValueType.List;
