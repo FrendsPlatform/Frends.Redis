@@ -1,7 +1,7 @@
-﻿namespace Frends.Redis.GetValue.Helpers;
+﻿namespace Frends.Redis.GetKeys.Helpers;
 
 using System;
-using GetKeys.Definitions;
+using Definitions;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Azure.Identity;

@@ -1,6 +1,4 @@
-﻿using Frends.Redis.GetValue.Helpers;
-
-namespace Frends.Redis.GetKeys;
+﻿namespace Frends.Redis.GetKeys;
 
 using System;
 using System.Collections.Generic;
@@ -9,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Definitions;
 using Helpers;
-using StackExchange.Redis;
 
 /// <summary>
 /// Main class of the Task.
