@@ -29,7 +29,7 @@ public class Input
     /// </summary>
     /// <example>Bar</example>
     [DisplayFormat(DataFormatString = "Text")]
-    [UIHint(nameof(ValueType), "", ValueType.String, ValueType.Json)]
+    [UIHint(nameof(ValueType), "", ValueType.String)]
     public string StringValue { get; set; }
 
     /// <summary>
@@ -45,6 +45,16 @@ public class Input
     /// <example>{ { "Foo", "Bar" }, { "Moo", "Baz" } }</example>
     [UIHint(nameof(ValueType), "", ValueType.Hash)]
     public Dictionary<string, string> HashValue { get; set; }
+
+    /// <summary>
+    /// Operation that will be executed in case of collection-like type.
+    /// String values are always overwritten.
+    /// </summary>
+    /// <example>Operation.Append</example>
+    [DefaultValue(Operation.Append)]
+    [UIHint(nameof(ValueType), "", ValueType.Hash, ValueType.List, ValueType.Set)]
+
+    public Operation CollectionOperation { get; set; } = Operation.Append;
 
     /// <summary>
     /// Time to live in seconds. Leave empty for infinite.

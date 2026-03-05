@@ -8,8 +8,7 @@ public enum ValueType
 #pragma warning disable SA1602 // enum self-explanatory
     String = 1,
     Hash = 2,
-    Json = 3,
-    List = 4,
-    Set = 5,
+    List = 3,
+    Set = 4,
 #pragma warning restore SA1602
 }

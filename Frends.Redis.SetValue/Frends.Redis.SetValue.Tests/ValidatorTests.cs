@@ -10,7 +10,6 @@ public class ValidatorTests
 {
     [TestCase(ValueType.String)]
     [TestCase(ValueType.Hash)]
-    [TestCase(ValueType.Json)]
     [TestCase(ValueType.Set)]
     [TestCase(ValueType.List)]
     public void ValidateInputThrowsProperly(ValueType valueType)

@@ -22,10 +22,9 @@ public static class ErrorHandler
             throw new Exception($"{errorMessage}\n{exception.Message}");
         }
 
-        return new Result(null, false, new Error
+        return new Result
         {
-            Message = $"{errorMessage}\n{exception.Message}",
-            AdditionalInfo = exception,
-        });
+            Error = new Error { Message = $"{errorMessage}\n{exception.Message}", AdditionalInfo = exception },
+        };
     }
 }

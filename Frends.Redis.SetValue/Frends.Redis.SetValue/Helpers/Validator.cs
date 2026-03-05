@@ -10,7 +10,7 @@ internal static class Validator
     {
         var isValid = input.ValueType switch
         {
-            ValueType.String or ValueType.Json => input.StringValue is not null,
+            ValueType.String => input.StringValue is not null,
             ValueType.Hash => input.HashValue is not null,
             ValueType.List or ValueType.Set => input.ListValue is not null,
             _ => throw new ArgumentOutOfRangeException(nameof(input), input.ValueType, null),

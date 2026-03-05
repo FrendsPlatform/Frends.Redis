@@ -11,59 +11,35 @@ internal static class Setter
 {
     internal static async Task SetValue(this IDatabase db, Input input)
     {
-        var expiry = input.ExpiryInSeconds.HasValue
-            ? TimeSpan.FromSeconds(input.ExpiryInSeconds.Value)
-            : (TimeSpan?)null;
+        var transaction = db.CreateTransaction();
+        if (input.CollectionOperation == Operation.Overwrite)
+            transaction.KeyDeleteAsync(input.Key).ConfigureAwait(false);
 
         switch (input.ValueType)
         {
             case Definitions.ValueType.String:
-            case Definitions.ValueType.Json:
-                await db.StringSetAsync(input.Key, input.StringValue, expiry);
-
+                transaction.StringSetAsync(input.Key, input.StringValue);
                 break;
-
             case Definitions.ValueType.Hash:
-                await db.SetHash(input.Key, input.HashValue, expiry);
-
+                var hashEntries = input.HashValue.Select(x => new HashEntry(x.Key, x.Value)).ToArray();
+                transaction.HashSetAsync(input.Key, hashEntries);
                 break;
             case Definitions.ValueType.List:
-                await db.SetList(input.Key, input.ListValue, expiry);
-
+                var listEntries = input.ListValue.Select(x => (RedisValue)x).ToArray();
+                transaction.ListLeftPushAsync(input.Key, listEntries);
                 break;
-
             case Definitions.ValueType.Set:
-                await db.SetSet(input.Key, input.ListValue, expiry);
-
+                var setValues = input.ListValue.Select(x => (RedisValue)x).ToArray();
+                transaction.SetAddAsync(input.Key, setValues);
                 break;
-
             default:
                 throw new ArgumentOutOfRangeException(nameof(input), input.ValueType, null);
         }
-    }
 
-    private static async Task SetHash(
-        this IDatabase db,
-        string key,
-        Dictionary<string, string> values,
-        TimeSpan? expiry)
-    {
-        var entries = values.Select(x => new HashEntry(x.Key, x.Value)).ToArray();
-        await db.HashSetAsync(key, entries);
-        if (expiry.HasValue) await db.KeyExpireAsync(key, expiry);
-    }
-
-    private static async Task SetList(this IDatabase db, string key, List<string> values, TimeSpan? expiry)
-    {
-        var redisValues = values.Select(x => (RedisValue)x).ToArray();
-        await db.ListRightPushAsync(key, redisValues);
-        if (expiry.HasValue) await db.KeyExpireAsync(key, expiry);
-    }
-
-    private static async Task SetSet(this IDatabase db, string key, List<string> values, TimeSpan? expiry)
-    {
-        var redisValues = values.Select(x => (RedisValue)x).ToArray();
-        await db.SetAddAsync(key, redisValues);
-        if (expiry.HasValue) await db.KeyExpireAsync(key, expiry);
+        var expiry = input.ExpiryInSeconds.HasValue
+            ? TimeSpan.FromSeconds(input.ExpiryInSeconds.Value)
+            : (TimeSpan?)null;
+        if (expiry.HasValue) transaction.KeyExpireAsync(input.Key, expiry);
+        await transaction.ExecuteAsync().ConfigureAwait(false);
     }
 }

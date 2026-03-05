@@ -33,10 +33,11 @@ public static class Redis
         try
         {
             input.Validate();
-            await using var redis = await ConnectionMultiplexer.ConnectAsync(connection.ConnectionString);
+            await using var redis =
+                await ConnectionMultiplexer.ConnectAsync(connection.ConnectionString).ConfigureAwait(false);
             var db = redis.GetDatabase();
             cancellationToken.ThrowIfCancellationRequested();
-            await db.SetValue(input);
+            await db.SetValue(input).ConfigureAwait(false);
 
             return new Result();
         }

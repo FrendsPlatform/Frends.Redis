@@ -2,9 +2,10 @@
 
 ## [2.0.0] - 2026-03-03
 ### Added
-- Added support for more Redis value types (string, hash, list, JSON, set)
+- Add support for more Redis value types (string, hash, list, set)
 - **[Breaking Change]** Rename Input.Value to Input.StringValue to distinguish between values of different types.
-- Added support for new connection methods
+- Add option to define if collection-like values will be appended or overwritten.
+- Add support for new connection methods
 - 
 ## [1.1.0] - 2025-07-31
 ### Changed
