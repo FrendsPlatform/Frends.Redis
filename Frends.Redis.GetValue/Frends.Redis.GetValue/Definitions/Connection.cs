@@ -1,5 +1,6 @@
 namespace Frends.Redis.GetValue.Definitions;
 
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 /// <summary>
@@ -8,9 +9,16 @@ using System.ComponentModel.DataAnnotations;
 public class Connection
 {
     /// <summary>
+    /// Method to use to connect to Redis
+    /// </summary>
+    /// <example>ConnectionMethod.SimpleConnectionString</example>
+    [DefaultValue(ConnectionMethod.SimpleConnectionString)]
+    public ConnectionMethod ConnectionMethod { get; set; } = ConnectionMethod.SimpleConnectionString;
+
+    /// <summary>
     /// Connection string to Redis.
     /// </summary>
-    /// <example>127.0.0.1:6379</example>
+    /// <example>your-redis-name.redis.cache.windows.net:6380,ssl=true</example>
     [DisplayFormat(DataFormatString = "Text")]
     public string ConnectionString { get; set; }
 }

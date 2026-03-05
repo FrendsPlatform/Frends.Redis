@@ -6,6 +6,7 @@
 
 - Changed result values to distinguish between supported values (string, hash, set, list)
 - **[Breaking Change]** Renamed Result.Value to Result.StringValue to distinguish between other values
+- Added support for MicrosoftEntraId Authentication
 
 ## [1.1.0] - 2025-07-31
 

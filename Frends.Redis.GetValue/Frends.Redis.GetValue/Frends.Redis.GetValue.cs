@@ -1,5 +1,4 @@
-﻿
-namespace Frends.Redis.GetValue;
+﻿namespace Frends.Redis.GetValue;
 
 using System;
 using System.ComponentModel;
@@ -31,12 +30,10 @@ public static class Redis
     {
         try
         {
-            if (string.IsNullOrEmpty(input.Key))
-            {
-                throw new ArgumentException("Key cannot be null or empty", nameof(input));
-            }
+            connection.Validate();
+            input.Validate();
 
-            redis = await ConnectionMultiplexer.ConnectAsync(connection.ConnectionString);
+            redis = await ConnectionHandler.GetConnectionAsync(connection).ConfigureAwait(false);
             var db = redis.GetDatabase();
             RedisType type = await db.KeyTypeAsync(input.Key);
 
