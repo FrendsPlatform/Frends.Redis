@@ -33,7 +33,8 @@ public class IntegrationTests
 
         redis = await ConnectionMultiplexer.ConnectAsync(new ConfigurationOptions
         {
-            EndPoints = { connectionString }, AllowAdmin = true,
+            EndPoints = { connectionString },
+            AllowAdmin = true,
         });
     }
 
