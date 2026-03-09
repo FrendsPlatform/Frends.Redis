@@ -8,8 +8,8 @@
         "Migration": [
           {
             "Type": "Copy",
-            "Target": "Input.Value",
-            "Source": "Input.StringValue"
+            "Target": "Input.StringValue",
+            "Source": "Input.Value"
           }
         ]
       }
