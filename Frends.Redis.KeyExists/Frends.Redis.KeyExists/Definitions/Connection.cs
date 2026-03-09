@@ -1,5 +1,6 @@
 namespace Frends.Redis.KeyExists.Definitions;
 
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 /// <summary>
@@ -7,6 +8,13 @@ using System.ComponentModel.DataAnnotations;
 /// </summary>
 public class Connection
 {
+    /// <summary>
+    /// Method to use to connect to Redis
+    /// </summary>
+    /// <example>ConnectionMethod.SimpleConnectionString</example>
+    [DefaultValue(ConnectionMethod.SimpleConnectionString)]
+    public ConnectionMethod ConnectionMethod { get; set; } = ConnectionMethod.SimpleConnectionString;
+
     /// <summary>
     /// Connection string to Redis.
     /// </summary>

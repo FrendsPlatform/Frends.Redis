@@ -1,7 +1,6 @@
 ﻿namespace Frends.Redis.KeyExists.Definitions;
 
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 /// <summary>
 /// Options class usually contains parameters that are required.

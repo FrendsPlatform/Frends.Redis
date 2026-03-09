@@ -3,6 +3,8 @@ namespace Frends.Redis.GetValue.Tests;
 using System;
 using System.Threading.Tasks;
 using Definitions;
+using System.Collections.Generic;
+using System.Linq;
 using StackExchange.Redis;
 using Testcontainers.Redis;
 using NUnit.Framework;
@@ -10,7 +12,6 @@ using NUnit.Framework;
 [TestFixture]
 public class IntegrationTests
 {
-    private const string Value = "test-value";
     private const string Key = "test-key";
     private RedisContainer redisContainer;
     private IConnectionMultiplexer redis;
@@ -40,20 +41,11 @@ public class IntegrationTests
     [SetUp]
     public void Setup()
     {
-        connection = new Connection
-        {
-            ConnectionString = connectionString,
-        };
+        connection = new Connection { ConnectionString = connectionString, };
 
-        input = new Input
-        {
-            Key = Key,
-        };
+        input = new Input { Key = Key, };
 
-        options = new Options
-        {
-            ThrowErrorOnFailure = true,
-        };
+        options = new Options { ThrowErrorOnFailure = true, };
 
         var server = redis.GetServer(connectionString);
         server.FlushAllDatabases();
@@ -75,11 +67,13 @@ public class IntegrationTests
     }
 
     [Test]
-    public async Task GetValueIsSuccessful()
+    public async Task GetStringValueIsSuccessful()
     {
         // Arrange
         var db = redis.GetDatabase();
-        await db.StringSetAsync(Key, Value);
+        const string value = "test-value";
+
+        await db.StringSetAsync(Key, value);
 
         // Act
         var result = await Redis.GetValue(input, options, connection);
@@ -87,7 +81,49 @@ public class IntegrationTests
         // Assert
         Assert.That(result.Success, Is.True);
         Assert.IsNull(result.Error);
-        Assert.That(result.Value, Is.EqualTo(Value));
+        Assert.That(result.ListValue, Is.Null);
+        Assert.That(result.DictionaryValue, Is.Null);
+        Assert.That(result.StringValue, Is.EqualTo(value));
+    }
+
+    [Test]
+    public async Task GetDictionaryValueIsSuccessful()
+    {
+        // Arrange
+        var db = redis.GetDatabase();
+        var value = new Dictionary<string, string> { { "key1", "value1" }, { "key2", "value2" } };
+        var entries = value.Select(x => new HashEntry(x.Key, x.Value)).ToArray();
+        await db.HashSetAsync(Key, entries);
+
+        // Act
+        var result = await Redis.GetValue(input, options, connection);
+
+        // Assert
+        Assert.That(result.Success, Is.True);
+        Assert.IsNull(result.Error);
+        Assert.That(result.StringValue, Is.Null);
+        Assert.That(result.ListValue, Is.Null);
+        Assert.That(result.DictionaryValue, Is.EquivalentTo(value));
+    }
+
+    [Test]
+    public async Task GetListValueIsSuccessful()
+    {
+        // Arrange
+        var db = redis.GetDatabase();
+        var value = new List<string> { "key1", "key2" };
+        var entries = value.Select(x => (RedisValue)x).ToArray();
+        await db.ListRightPushAsync(Key, entries);
+
+        // Act
+        var result = await Redis.GetValue(input, options, connection);
+
+        // Assert
+        Assert.That(result.Success, Is.True);
+        Assert.IsNull(result.Error);
+        Assert.That(result.StringValue, Is.Null);
+        Assert.That(result.DictionaryValue, Is.Null);
+        Assert.That(result.ListValue, Is.EquivalentTo(value));
     }
 
     [Test]

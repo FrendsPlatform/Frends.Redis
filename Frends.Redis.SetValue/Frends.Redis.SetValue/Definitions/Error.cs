@@ -1,17 +1,21 @@
+using System;
+
 namespace Frends.Redis.SetValue.Definitions;
 
 /// <summary>
-/// Object with error information
+/// Error that occurred during the task.
 /// </summary>
 public class Error
 {
     /// <summary>
-    /// Error message
+    /// Summary of the error.
     /// </summary>
+    /// <example>Unable to set value.</example>
     public string Message { get; set; }
 
     /// <summary>
-    /// Object with additional information
+    /// Additional information about the error.
     /// </summary>
-    public object AdditionalInfo { get; set; }
+    /// <example>object { Exception AdditionalInfo }</example>
+    public Exception AdditionalInfo { get; set; }
 }

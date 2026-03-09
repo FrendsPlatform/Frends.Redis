@@ -1,31 +1,38 @@
 ﻿namespace Frends.Redis.GetValue.Definitions;
 
+using System.Collections.Generic;
+
 /// <summary>
 /// Result class usually contains properties of the return object.
 /// </summary>
 public class Result
 {
-    internal Result(string value = null, bool success = true, Error error = null)
-    {
-        Value = value;
-        Success = success;
-        Error = error;
-    }
-
     /// <summary>
-    /// Returned value
+    /// Returned string value
     /// </summary>
     /// <example>"foobar"</example>
-    public string? Value { get; private set; }
+    public string StringValue { get; set; }
+
+    /// <summary>
+    /// Returned list value
+    /// </summary>
+    /// <example>["Foo", "Bar"]</example>
+    public List<string> ListValue { get; set; }
+
+    /// <summary>
+    /// Returned dictionary value
+    /// </summary>
+    /// <example>{ { "Foo", "Bar" }, { "Moo", "Baz" } }</example>
+    public Dictionary<string, string> DictionaryValue { get; set; }
 
     /// <summary>
     /// Success flag
     /// </summary>
     /// <example>true</example>
-    public bool Success { get; private set; }
+    public bool Success { get; set; }
 
     /// <summary>
     /// Error info
     /// </summary>
-    public Error Error { get; private set; }
+    public Error Error { get; set; }
 }
