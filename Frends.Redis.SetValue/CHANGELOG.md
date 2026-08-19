@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.1.0] - 2026-08-17
+
+### Changed
+
+- Updated target framework from .NET 6 to .NET 8.
+
 ## [2.0.0] - 2026-03-03
 
 ### Added
