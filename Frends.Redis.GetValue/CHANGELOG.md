@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.1.0] - 2026-11-09
+
+### Changed
+
+- Updated the task to target .NET 8.
+
 ## [2.0.0] - 2026-03-03
 
 ### Changed

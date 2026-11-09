@@ -1,7 +1,7 @@
-namespace Frends.Redis.GetValue.Helpers;
-
 using System;
-using Definitions;
+using Frends.Redis.GetValue.Definitions;
+
+namespace Frends.Redis.GetValue.Helpers;
 
 /// <summary>
 /// Handles error with usage of a standard ThrowOnFailure Frends flag
