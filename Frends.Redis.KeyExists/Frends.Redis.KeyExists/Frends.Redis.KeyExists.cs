@@ -1,7 +1,8 @@
-﻿namespace Frends.Redis.KeyExists;
+namespace Frends.Redis.KeyExists;
 
 using System;
 using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
 using Definitions;
 using Helpers;
@@ -16,16 +17,19 @@ public static class Redis
     /// [Documentation](https://tasks.frends.com/tasks/frends-tasks/Frends.Redis.KeyExists).
     /// </summary>
     /// <param name="input">Data to check.</param>
-    /// <param name="options">Exception settings.</param>
     /// <param name="connection">Connection info.</param>
+    /// <param name="options">Exception settings.</param>
+    /// <param name="cancellationToken">A cancellation token provided by Frends Platform.</param>
     /// <returns>Object { bool Success, Error error }.</returns>
     public static async Task<Result> KeyExists(
         [PropertyTab] Input input,
+        [PropertyTab] Connection connection,
         [PropertyTab] Options options,
-        [PropertyTab] Connection connection)
+        CancellationToken cancellationToken)
     {
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             await using var redis = await ConnectionHandler.GetConnectionAsync(connection).ConfigureAwait(false);
             var db = redis.GetDatabase();
             var exists = await db.KeyExistsAsync(input.Key);

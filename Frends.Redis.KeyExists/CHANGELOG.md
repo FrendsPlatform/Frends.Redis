@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.0] - 2026-11-09
+
+### Changed
+
+- **[Breaking Change]** Changed the Task to target .NET 8 and reordered the parameters to Input, Connection, Options.
+- Added support for cancelling the Task execution.
+- Improved documentation examples for the result and error properties.
+
 ## [1.2.0] - 2026-03-03
 
 ### Added

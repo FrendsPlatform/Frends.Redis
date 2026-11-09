@@ -20,5 +20,6 @@ public class Result
     /// <summary>
     /// Error info
     /// </summary>
+    /// <example>object { string Message, object AdditionalInfo }</example>
     public Error Error { get; private set; }
 }

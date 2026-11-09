@@ -1,6 +1,7 @@
 namespace Frends.Redis.KeyExists.Tests;
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Definitions;
 using StackExchange.Redis;
@@ -82,7 +83,7 @@ public class IntegrationTests
         await db.StringSetAsync(testKey, testValue);
 
         // Act
-        var result = await Redis.KeyExists(input, options, connection);
+        var result = await Redis.KeyExists(input, connection, options, CancellationToken.None);
 
         // Assert
         Assert.IsNull(result.Error);
@@ -95,7 +96,7 @@ public class IntegrationTests
         // Arrange
 
         // Act
-        var result = await Redis.KeyExists(input, options, connection);
+        var result = await Redis.KeyExists(input, connection, options, CancellationToken.None);
 
         // Assert
         Assert.IsFalse(result.Success);
@@ -110,7 +111,7 @@ public class IntegrationTests
         connection.ConnectionString = "invalid-connection-string";
 
         // Act
-        AsyncTestDelegate action = async () => await Redis.KeyExists(input, options, connection);
+        AsyncTestDelegate action = async () => await Redis.KeyExists(input, connection, options, CancellationToken.None);
 
         // Assert
         var savedValue = await db.StringGetAsync(input.Key);
@@ -127,7 +128,7 @@ public class IntegrationTests
         options.ErrorMessageOnFailure = message;
 
         // Act
-        AsyncTestDelegate action = async () => await Redis.KeyExists(input, options, connection);
+        AsyncTestDelegate action = async () => await Redis.KeyExists(input, connection, options, CancellationToken.None);
 
         // Assert
         var ex = Assert.ThrowsAsync<Exception>(action);
@@ -142,7 +143,7 @@ public class IntegrationTests
         options.ThrowErrorOnFailure = true;
 
         // Act
-        AsyncTestDelegate action = async () => await Redis.KeyExists(input, options, connection);
+        AsyncTestDelegate action = async () => await Redis.KeyExists(input, connection, options, CancellationToken.None);
 
         // Assert
         Assert.ThrowsAsync<Exception>(action);
@@ -156,7 +157,7 @@ public class IntegrationTests
         options.ThrowErrorOnFailure = false;
 
         // Act
-        var result = await Redis.KeyExists(input, options, connection);
+        var result = await Redis.KeyExists(input, connection, options, CancellationToken.None);
 
         // Assert
         Assert.IsFalse(result.Success);
