@@ -1,7 +1,7 @@
-﻿namespace Frends.Redis.GetKeys.Helpers;
+namespace Frends.Redis.GetKeys.Helpers;
 
 using System;
-using Definitions;
+using Frends.Redis.GetKeys.Definitions;
 
 internal static class Validator
 {

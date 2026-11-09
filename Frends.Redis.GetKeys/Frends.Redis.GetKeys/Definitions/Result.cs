@@ -1,4 +1,4 @@
-﻿namespace Frends.Redis.GetKeys.Definitions;
+namespace Frends.Redis.GetKeys.Definitions;
 
 using System.Collections.Generic;
 
@@ -23,10 +23,12 @@ public class Result
     /// <summary>
     /// Error info
     /// </summary>
+    /// <example>null</example>
     public Error Error { get; private set; }
 
     /// <summary>
     /// Found keys
     /// </summary>
+    /// <example>["customer:42", "customer:43"]</example>
     public List<string> Keys { get; private set; }
 }

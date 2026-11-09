@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0] - 2026-11-09
+
+### Changed
+
+- Added optional Redis key-pattern filtering while preserving retrieval of all keys by default.
+
 ## [1.2.0] - 2026-03-03
 
 ### Added

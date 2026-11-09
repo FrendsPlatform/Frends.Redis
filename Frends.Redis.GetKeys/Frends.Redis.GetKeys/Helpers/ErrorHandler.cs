@@ -1,7 +1,7 @@
 namespace Frends.Redis.GetKeys.Helpers;
 
 using System;
-using Definitions;
+using Frends.Redis.GetKeys.Definitions;
 
 /// <summary>
 /// Handles error with usage of a standard ThrowOnFailure Frends flag
