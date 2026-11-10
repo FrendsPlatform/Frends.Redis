@@ -20,6 +20,7 @@ public class Connection
     /// Connection string to Redis.
     /// </summary>
     /// <example>127.0.0.1:6379</example>
+    [Required]
     [DisplayFormat(DataFormatString = "Text")]
     public string ConnectionString { get; set; }
 }

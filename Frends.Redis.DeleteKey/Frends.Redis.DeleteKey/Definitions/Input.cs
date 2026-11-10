@@ -1,4 +1,4 @@
-﻿namespace Frends.Redis.DeleteKey.Definitions;
+namespace Frends.Redis.DeleteKey.Definitions;
 
 using System.ComponentModel.DataAnnotations;
 
@@ -11,6 +11,7 @@ public class Input
     /// Key to delete
     /// </summary>
     /// <example>Foo</example>
+    [Required]
     [DisplayFormat(DataFormatString = "Text")]
     public string Key { get; set; }
 }

@@ -1,10 +1,11 @@
-﻿namespace Frends.Redis.DeleteKey;
-
 using System;
 using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
-using Definitions;
-using Helpers;
+using Frends.Redis.DeleteKey.Definitions;
+using Frends.Redis.DeleteKey.Helpers;
+
+namespace Frends.Redis.DeleteKey;
 
 /// <summary>
 /// Main class of the Task to delete Key from Redis database.
@@ -16,18 +17,20 @@ public static class Redis
     /// [Documentation](https://tasks.frends.com/tasks/frends-tasks/Frends.Redis.DeleteKey).
     /// </summary>
     /// <param name="input">Data to set.</param>
-    /// <param name="options">Exception settings.</param>
     /// <param name="connection">Connection info.</param>
-    /// <returns>Object { bool Success, Error error }.</returns>
+    /// <param name="options">Exception settings.</param>
+    /// <param name="cancellationToken">A cancellation token provided by Frends Platform.</param>
+    /// <returns>object { bool Success, Error Error { string Message, object AdditionalInfo } }</returns>
     public static async Task<Result> DeleteKey(
         [PropertyTab] Input input,
+        [PropertyTab] Connection connection,
         [PropertyTab] Options options,
-        [PropertyTab] Connection connection)
+        CancellationToken cancellationToken = default)
     {
         try
         {
-            connection.Validate();
-            input.Validate();
+            ValidationHandler.Run(input, connection);
+            cancellationToken.ThrowIfCancellationRequested();
 
             await using var redis = await ConnectionHandler.GetConnectionAsync(connection).ConfigureAwait(false);
             var db = redis.GetDatabase();
@@ -36,7 +39,7 @@ public static class Redis
         }
         catch (Exception ex)
         {
-            return ErrorHandler.Handle(ex, options.ThrowErrorOnFailure, options.ErrorMessageOnFailure);
+            return ex.Handle(options);
         }
     }
 }

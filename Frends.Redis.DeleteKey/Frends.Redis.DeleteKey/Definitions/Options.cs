@@ -1,4 +1,4 @@
-﻿namespace Frends.Redis.DeleteKey.Definitions;
+namespace Frends.Redis.DeleteKey.Definitions;
 
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
