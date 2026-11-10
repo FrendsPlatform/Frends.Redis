@@ -5,21 +5,15 @@
 /// </summary>
 public class Result
 {
-    internal Result(bool success = true, Error error = null)
-    {
-        Success = success;
-        Error = error;
-    }
-
     /// <summary>
     /// Success flag
     /// </summary>
     /// <example>true</example>
-    public bool Success { get; private set; }
+    public bool Success { get; set; }
 
     /// <summary>
     /// Error info
     /// </summary>
     /// <example>object { string Message, object AdditionalInfo }</example>
-    public Error Error { get; private set; }
+    public Error Error { get; set; }
 }

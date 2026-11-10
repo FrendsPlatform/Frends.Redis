@@ -33,11 +33,11 @@ public static class Redis
             await using var redis = await ConnectionHandler.GetConnectionAsync(connection).ConfigureAwait(false);
             var db = redis.GetDatabase();
             var exists = await db.KeyExistsAsync(input.Key);
-            return new Result(exists);
+            return new Result { Success = exists };
         }
         catch (Exception ex)
         {
-            return ErrorHandler.Handle(ex, options.ThrowErrorOnFailure, options.ErrorMessageOnFailure);
+            return ex.Handle(options);
         }
     }
 }
