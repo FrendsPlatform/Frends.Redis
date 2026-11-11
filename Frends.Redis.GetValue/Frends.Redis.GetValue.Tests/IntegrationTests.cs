@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -137,7 +138,7 @@ public class IntegrationTests
         AsyncTestDelegate action = async () => await Redis.GetValue(input, connection, options, CancellationToken.None);
 
         // Assert
-        Assert.ThrowsAsync<Exception>(action);
+        Assert.ThrowsAsync<ValidationException>(action);
     }
 
     [Test]
@@ -150,7 +151,7 @@ public class IntegrationTests
         AsyncTestDelegate action = async () => await Redis.GetValue(input, connection, options, CancellationToken.None);
 
         // Assert
-        Assert.ThrowsAsync<Exception>(action);
+        Assert.ThrowsAsync<RedisConnectionException>(action);
     }
 
     [Test]
@@ -180,7 +181,7 @@ public class IntegrationTests
         AsyncTestDelegate action = async () => await Redis.GetValue(input, connection, options, CancellationToken.None);
 
         // Assert
-        Assert.ThrowsAsync<Exception>(action);
+        Assert.ThrowsAsync<RedisConnectionException>(action);
     }
 
     [Test]
@@ -213,6 +214,6 @@ public class IntegrationTests
             cancellationSource.Token);
 
         // Assert
-        Assert.ThrowsAsync<Exception>(action);
+        Assert.ThrowsAsync<OperationCanceledException>(action);
     }
 }
