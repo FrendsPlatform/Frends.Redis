@@ -34,6 +34,6 @@ public class Result
     /// <summary>
     /// Error info
     /// </summary>
-    /// <example>null</example>
+    /// <example>object { string Message, Exception AdditionalInfo }</example>
     public Error Error { get; set; }
 }

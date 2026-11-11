@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
@@ -33,8 +33,7 @@ public static class Redis
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            connection.Validate();
-            input.Validate();
+            ValidationHandler.Run(input, connection);
 
             await using var redis = await ConnectionHandler.GetConnectionAsync(connection).ConfigureAwait(false);
             var db = redis.GetDatabase();
@@ -69,7 +68,7 @@ public static class Redis
         }
         catch (Exception ex)
         {
-            return ErrorHandler.Handle(ex, options.ThrowErrorOnFailure, options.ErrorMessageOnFailure);
+            return ex.Handle(options);
         }
     }
 }
