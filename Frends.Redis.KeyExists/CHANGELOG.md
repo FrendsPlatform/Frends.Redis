@@ -4,7 +4,8 @@
 
 ### Changed
 
-- **[Breaking Change]** Changed the Task to target .NET 8 and reordered the parameters to Input, Connection, Options.
+- **[Breaking Change]** Reordered the parameters to Input, Connection, Options.
+- Changed the Task to target .NET 8
 - Added support for cancelling the Task execution.
 - Improved documentation examples for the result and error properties.
 
