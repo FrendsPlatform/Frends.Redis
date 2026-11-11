@@ -18,15 +18,17 @@ public class Result
     /// Success flag
     /// </summary>
     /// <example>true</example>
-    public bool Success { get; private set; }
+    public bool Success { get; set; }
 
     /// <summary>
     /// Error info
     /// </summary>
-    public Error Error { get; private set; }
+    /// <example>null</example>
+    public Error Error { get; set; }
 
     /// <summary>
     /// Found keys
     /// </summary>
-    public List<string> Keys { get; private set; }
+    /// <example>["customer:42", "customer:43"]</example>
+    public List<string> Keys { get; set; }
 }

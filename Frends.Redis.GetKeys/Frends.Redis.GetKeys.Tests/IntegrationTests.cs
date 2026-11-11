@@ -1,17 +1,19 @@
 namespace Frends.Redis.GetKeys.Tests;
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
-using Definitions;
+using Frends.Redis.GetKeys.Definitions;
+using NUnit.Framework;
 using StackExchange.Redis;
 using Testcontainers.Redis;
-using NUnit.Framework;
 
 [TestFixture]
 public class IntegrationTests
 {
     private RedisContainer redisContainer;
     private IConnectionMultiplexer redis;
+    private Input input;
     private Connection connection;
     private Options options;
     private string connectionString;
@@ -37,6 +39,7 @@ public class IntegrationTests
     [SetUp]
     public void Setup()
     {
+        input = new Input();
         connection = new Connection
         {
             ConnectionString = connectionString,
@@ -70,7 +73,7 @@ public class IntegrationTests
     public async Task GetKeysIsSuccessfulWhenNoKeyExists()
     {
         // Act
-        var result = await Redis.GetKeys(options, connection);
+        var result = await Redis.GetKeys(input, connection, options, CancellationToken.None);
 
         // Assert
         Assert.That(result.Success, Is.True);
@@ -88,12 +91,28 @@ public class IntegrationTests
         var expectedKeys = new[] { "key1", "key2" };
 
         // Act
-        var result = await Redis.GetKeys(options, connection);
+        var result = await Redis.GetKeys(input, connection, options, CancellationToken.None);
 
         // Assert
         Assert.That(result.Success, Is.True);
         Assert.IsNull(result.Error);
         Assert.That(result.Keys, Is.EquivalentTo(expectedKeys));
+    }
+
+    [Test]
+    public async Task GetKeysOnlyReturnsMatchingKeys()
+    {
+        // Arrange
+        var db = redis.GetDatabase();
+        await db.StringSetAsync("customer:42", "value1");
+        await db.StringSetAsync("order:43", "value2");
+        input.KeyPattern = "customer:*";
+
+        // Act
+        var result = await Redis.GetKeys(input, connection, options, CancellationToken.None);
+
+        // Assert
+        Assert.That(result.Keys, Is.EquivalentTo(new[] { "customer:42" }));
     }
 
     [Test]
@@ -103,10 +122,10 @@ public class IntegrationTests
         connection.ConnectionString = "invalid-connection-string";
 
         // Act
-        AsyncTestDelegate action = async () => await Redis.GetKeys(options, connection);
+        AsyncTestDelegate action = async () => await Redis.GetKeys(input, connection, options, CancellationToken.None);
 
         // Assert
-        Assert.ThrowsAsync<Exception>(action);
+        Assert.ThrowsAsync<RedisConnectionException>(action);
     }
 
     [Test]
@@ -118,7 +137,7 @@ public class IntegrationTests
         options.ErrorMessageOnFailure = message;
 
         // Act
-        AsyncTestDelegate action = async () => await Redis.GetKeys(options, connection);
+        AsyncTestDelegate action = async () => await Redis.GetKeys(input, connection, options, CancellationToken.None);
 
         // Assert
         var ex = Assert.ThrowsAsync<Exception>(action);
@@ -133,10 +152,10 @@ public class IntegrationTests
         options.ThrowErrorOnFailure = true;
 
         // Act
-        AsyncTestDelegate action = async () => await Redis.GetKeys(options, connection);
+        AsyncTestDelegate action = async () => await Redis.GetKeys(input, connection, options, CancellationToken.None);
 
         // Assert
-        Assert.ThrowsAsync<Exception>(action);
+        Assert.ThrowsAsync<RedisConnectionException>(action);
     }
 
     [Test]
@@ -147,7 +166,7 @@ public class IntegrationTests
         options.ThrowErrorOnFailure = false;
 
         // Act
-        var result = await Redis.GetKeys(options, connection);
+        var result = await Redis.GetKeys(input, connection, options, CancellationToken.None);
 
         // Assert
         Assert.IsFalse(result.Success);
