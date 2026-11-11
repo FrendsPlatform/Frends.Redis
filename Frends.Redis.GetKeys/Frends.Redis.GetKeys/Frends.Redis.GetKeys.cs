@@ -1,12 +1,12 @@
-namespace Frends.Redis.GetKeys;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Frends.Redis.GetKeys.Definitions;
 using Frends.Redis.GetKeys.Helpers;
+
+namespace Frends.Redis.GetKeys;
 
 /// <summary>
 /// Main class of the Task.
@@ -30,7 +30,7 @@ public static class Redis
     {
         try
         {
-            connection.Validate();
+            ValidationHandler.Run(connection);
             cancellationToken.ThrowIfCancellationRequested();
             await using var redis = await ConnectionHandler.GetConnectionAsync(connection).ConfigureAwait(false);
             List<string> keys = [];
@@ -39,14 +39,14 @@ public static class Redis
             foreach (var key in server.Keys(pattern: input.KeyPattern))
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                keys.Add((string)key);
+                keys.Add(key);
             }
 
             return new Result(keys);
         }
         catch (Exception ex)
         {
-            return ErrorHandler.Handle(ex, options.ThrowErrorOnFailure, options.ErrorMessageOnFailure);
+            return ex.Handle(options);
         }
     }
 }

@@ -125,7 +125,7 @@ public class IntegrationTests
         AsyncTestDelegate action = async () => await Redis.GetKeys(input, connection, options, CancellationToken.None);
 
         // Assert
-        Assert.ThrowsAsync<Exception>(action);
+        Assert.ThrowsAsync<RedisConnectionException>(action);
     }
 
     [Test]
@@ -155,7 +155,7 @@ public class IntegrationTests
         AsyncTestDelegate action = async () => await Redis.GetKeys(input, connection, options, CancellationToken.None);
 
         // Assert
-        Assert.ThrowsAsync<Exception>(action);
+        Assert.ThrowsAsync<RedisConnectionException>(action);
     }
 
     [Test]
