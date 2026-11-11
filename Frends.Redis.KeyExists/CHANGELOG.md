@@ -4,10 +4,11 @@
 
 ### Changed
 
-- **[Breaking Change]** Reordered the parameters to Input, Connection, Options.
+- Reordered the parameters to Input, Connection, Options.
 - Changed the Task to target .NET 8
 - Added support for cancelling the Task execution.
 - Improved documentation examples for the result and error properties.
+- **[Breaking Change]** Task rethrows now original exception instead of wrapping it in general exception.
 
 ## [1.2.0] - 2026-03-03
 
