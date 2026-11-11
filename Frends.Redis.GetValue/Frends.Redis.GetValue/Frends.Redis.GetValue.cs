@@ -1,12 +1,13 @@
-﻿namespace Frends.Redis.GetValue;
-
-using System;
+﻿using System;
 using System.ComponentModel;
-using System.Threading.Tasks;
 using System.Linq;
-using Definitions;
-using Helpers;
+using System.Threading;
+using System.Threading.Tasks;
+using Frends.Redis.GetValue.Definitions;
+using Frends.Redis.GetValue.Helpers;
 using StackExchange.Redis;
+
+namespace Frends.Redis.GetValue;
 
 /// <summary>
 /// Main class of the Task.
@@ -17,19 +18,22 @@ public static class Redis
     /// This is Task.
     /// [Documentation](https://tasks.frends.com/tasks/frends-tasks/Frends.Redis.GetValue).
     /// </summary>
-    /// <param name="input">Data to set.</param>
-    /// <param name="options">Exception settings.</param>
+    /// <param name="input">Data to get.</param>
     /// <param name="connection">Connection info.</param>
-    /// <returns>Object { string Value, bool Success, Error error }.</returns>
+    /// <param name="options">Exception settings.</param>
+    /// <param name="cancellationToken">A cancellation token provided by Frends Platform.</param>
+    /// <returns>Object { string StringValue, List&lt;string&gt; ListValue, Dictionary&lt;string, string&gt; DictionaryValue, bool Success, Error Error }.</returns>
     public static async Task<Result> GetValue(
         [PropertyTab] Input input,
+        [PropertyTab] Connection connection,
         [PropertyTab] Options options,
-        [PropertyTab] Connection connection)
+        CancellationToken cancellationToken)
     {
         try
         {
-            connection.Validate();
-            input.Validate();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            ValidationHandler.Run(input, connection);
 
             await using var redis = await ConnectionHandler.GetConnectionAsync(connection).ConfigureAwait(false);
             var db = redis.GetDatabase();
@@ -64,7 +68,7 @@ public static class Redis
         }
         catch (Exception ex)
         {
-            return ErrorHandler.Handle(ex, options.ThrowErrorOnFailure, options.ErrorMessageOnFailure);
+            return ex.Handle(options);
         }
     }
 }

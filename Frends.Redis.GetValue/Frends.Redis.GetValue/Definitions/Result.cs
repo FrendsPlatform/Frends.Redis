@@ -1,4 +1,4 @@
-﻿namespace Frends.Redis.GetValue.Definitions;
+namespace Frends.Redis.GetValue.Definitions;
 
 using System.Collections.Generic;
 
@@ -34,5 +34,6 @@ public class Result
     /// <summary>
     /// Error info
     /// </summary>
+    /// <example>object { string Message, Exception AdditionalInfo }</example>
     public Error Error { get; set; }
 }

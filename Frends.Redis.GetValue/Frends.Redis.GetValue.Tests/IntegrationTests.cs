@@ -1,13 +1,15 @@
-namespace Frends.Redis.GetValue.Tests;
-
 using System;
-using System.Threading.Tasks;
-using Definitions;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Frends.Redis.GetValue.Definitions;
+using NUnit.Framework;
 using StackExchange.Redis;
 using Testcontainers.Redis;
-using NUnit.Framework;
+
+namespace Frends.Redis.GetValue.Tests;
 
 [TestFixture]
 public class IntegrationTests
@@ -76,7 +78,7 @@ public class IntegrationTests
         await db.StringSetAsync(Key, value);
 
         // Act
-        var result = await Redis.GetValue(input, options, connection);
+        var result = await Redis.GetValue(input, connection, options, CancellationToken.None);
 
         // Assert
         Assert.That(result.Success, Is.True);
@@ -96,7 +98,7 @@ public class IntegrationTests
         await db.HashSetAsync(Key, entries);
 
         // Act
-        var result = await Redis.GetValue(input, options, connection);
+        var result = await Redis.GetValue(input, connection, options, CancellationToken.None);
 
         // Assert
         Assert.That(result.Success, Is.True);
@@ -116,7 +118,7 @@ public class IntegrationTests
         await db.ListRightPushAsync(Key, entries);
 
         // Act
-        var result = await Redis.GetValue(input, options, connection);
+        var result = await Redis.GetValue(input, connection, options, CancellationToken.None);
 
         // Assert
         Assert.That(result.Success, Is.True);
@@ -133,10 +135,10 @@ public class IntegrationTests
         input.Key = null;
 
         // Act
-        AsyncTestDelegate action = async () => await Redis.GetValue(input, options, connection);
+        AsyncTestDelegate action = async () => await Redis.GetValue(input, connection, options, CancellationToken.None);
 
         // Assert
-        Assert.ThrowsAsync<Exception>(action);
+        Assert.ThrowsAsync<ValidationException>(action);
     }
 
     [Test]
@@ -146,10 +148,10 @@ public class IntegrationTests
         connection.ConnectionString = "invalid-connection-string";
 
         // Act
-        AsyncTestDelegate action = async () => await Redis.GetValue(input, options, connection);
+        AsyncTestDelegate action = async () => await Redis.GetValue(input, connection, options, CancellationToken.None);
 
         // Assert
-        Assert.ThrowsAsync<Exception>(action);
+        Assert.ThrowsAsync<RedisConnectionException>(action);
     }
 
     [Test]
@@ -161,7 +163,7 @@ public class IntegrationTests
         options.ErrorMessageOnFailure = message;
 
         // Act
-        AsyncTestDelegate action = async () => await Redis.GetValue(input, options, connection);
+        AsyncTestDelegate action = async () => await Redis.GetValue(input, connection, options, CancellationToken.None);
 
         // Assert
         var ex = Assert.ThrowsAsync<Exception>(action);
@@ -176,10 +178,10 @@ public class IntegrationTests
         options.ThrowErrorOnFailure = true;
 
         // Act
-        AsyncTestDelegate action = async () => await Redis.GetValue(input, options, connection);
+        AsyncTestDelegate action = async () => await Redis.GetValue(input, connection, options, CancellationToken.None);
 
         // Assert
-        Assert.ThrowsAsync<Exception>(action);
+        Assert.ThrowsAsync<RedisConnectionException>(action);
     }
 
     [Test]
@@ -190,10 +192,28 @@ public class IntegrationTests
         options.ThrowErrorOnFailure = false;
 
         // Act
-        var result = await Redis.GetValue(input, options, connection);
+        var result = await Redis.GetValue(input, connection, options, CancellationToken.None);
 
         // Assert
         Assert.IsFalse(result.Success);
         Assert.IsNotNull(result.Error);
+    }
+
+    [Test]
+    public void CancellationTokenStopsExecutionBeforeConnecting()
+    {
+        // Arrange
+        using var cancellationSource = new CancellationTokenSource();
+        cancellationSource.Cancel();
+
+        // Act
+        AsyncTestDelegate action = async () => await Redis.GetValue(
+            input,
+            connection,
+            options,
+            cancellationSource.Token);
+
+        // Assert
+        Assert.ThrowsAsync<OperationCanceledException>(action);
     }
 }

@@ -1,11 +1,11 @@
-﻿namespace Frends.Redis.GetValue.Helpers;
-
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Definitions;
 using System.Threading.Tasks;
 using Azure.Identity;
+using Frends.Redis.GetValue.Definitions;
 using StackExchange.Redis;
+
+namespace Frends.Redis.GetValue.Helpers;
 
 internal static class ConnectionHandler
 {
@@ -15,7 +15,7 @@ internal static class ConnectionHandler
         {
             ConnectionMethod.SimpleConnectionString => await SimpleConnection(connection.ConnectionString),
             ConnectionMethod.MicrosoftEntraId => await MicrosoftEntraIdConnection(connection.ConnectionString),
-            _ => throw new ArgumentOutOfRangeException(nameof(connection), connection.ConnectionMethod, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(connection), connection.ConnectionMethod, null),
         };
     }
 

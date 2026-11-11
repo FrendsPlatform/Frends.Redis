@@ -20,5 +20,6 @@ public class Connection
     /// </summary>
     /// <example>your-redis-name.redis.cache.windows.net:6380,ssl=true</example>
     [DisplayFormat(DataFormatString = "Text")]
+    [Required]
     public string ConnectionString { get; set; }
 }

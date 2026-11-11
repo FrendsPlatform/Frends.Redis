@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.0] - 2026-11-09
+
+### Changed
+
+- Updated the task to target .NET 8.
+- **[Breaking Change]** Original exceptions are now rethrown instead of being wrapped in a new exception.
+
 ## [2.0.0] - 2026-03-03
 
 ### Changed
