@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0] - 2026-11-10
+
+### Changed
+
+- Updated the task to .NET 8, improved failure handling, and added support for cancellation requests.
+
 ## [1.2.0] - 2026-03-03
 
 ### Added

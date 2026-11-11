@@ -1,4 +1,4 @@
-﻿namespace Frends.Redis.DeleteKey.Definitions;
+namespace Frends.Redis.DeleteKey.Definitions;
 
 /// <summary>
 /// Result class with info if key was successfully deleted.
@@ -20,5 +20,6 @@ public class Result
     /// <summary>
     /// Error info
     /// </summary>
+    /// <example>null</example>
     public Error Error { get; private set; }
 }

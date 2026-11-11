@@ -1,11 +1,12 @@
 namespace Frends.Redis.DeleteKey.Tests;
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
-using Definitions;
+using Frends.Redis.DeleteKey.Definitions;
+using NUnit.Framework;
 using StackExchange.Redis;
 using Testcontainers.Redis;
-using NUnit.Framework;
 
 [TestFixture]
 public class IntegrationTests
@@ -82,7 +83,7 @@ public class IntegrationTests
         await db.StringSetAsync(testKey, testValue);
 
         // Act
-        var result = await Redis.DeleteKey(input, options, connection);
+        var result = await Redis.DeleteKey(input, connection, options);
 
         // Assert
         var savedValue = await db.StringGetAsync(input.Key);
@@ -95,11 +96,23 @@ public class IntegrationTests
     public async Task DeleteKeyReturnsFalseWhenKeyDidNotExist()
     {
         // Act
-        var result = await Redis.DeleteKey(input, options, connection);
+        var result = await Redis.DeleteKey(input, connection, options);
 
         // Assert
         Assert.IsFalse(result.Success);
         Assert.IsNull(result.Error);
+    }
+
+    [Test]
+    public void DeleteKeyPropagatesCancellation()
+    {
+        using var cancellationSource = new CancellationTokenSource();
+        cancellationSource.Cancel();
+
+        AsyncTestDelegate action = async () =>
+            await Redis.DeleteKey(input, connection, options, cancellationSource.Token);
+
+        Assert.ThrowsAsync<OperationCanceledException>(action);
     }
 
     [Test]
@@ -110,11 +123,11 @@ public class IntegrationTests
         connection.ConnectionString = "invalid-connection-string";
 
         // Act
-        AsyncTestDelegate action = async () => await Redis.DeleteKey(input, options, connection);
+        AsyncTestDelegate action = async () => await Redis.DeleteKey(input, connection, options);
 
         // Assert
         var savedValue = await db.StringGetAsync(input.Key);
-        Assert.ThrowsAsync<Exception>(action);
+        Assert.CatchAsync<Exception>(action);
         Assert.IsFalse(savedValue.HasValue);
     }
 
@@ -127,7 +140,7 @@ public class IntegrationTests
         options.ErrorMessageOnFailure = message;
 
         // Act
-        AsyncTestDelegate action = async () => await Redis.DeleteKey(input, options, connection);
+        AsyncTestDelegate action = async () => await Redis.DeleteKey(input, connection, options);
 
         // Assert
         var ex = Assert.ThrowsAsync<Exception>(action);
@@ -142,10 +155,10 @@ public class IntegrationTests
         options.ThrowErrorOnFailure = true;
 
         // Act
-        AsyncTestDelegate action = async () => await Redis.DeleteKey(input, options, connection);
+        AsyncTestDelegate action = async () => await Redis.DeleteKey(input, connection, options);
 
         // Assert
-        Assert.ThrowsAsync<Exception>(action);
+        Assert.CatchAsync<Exception>(action);
     }
 
     [Test]
@@ -156,7 +169,7 @@ public class IntegrationTests
         options.ThrowErrorOnFailure = false;
 
         // Act
-        var result = await Redis.DeleteKey(input, options, connection);
+        var result = await Redis.DeleteKey(input, connection, options);
 
         // Assert
         Assert.IsFalse(result.Success);

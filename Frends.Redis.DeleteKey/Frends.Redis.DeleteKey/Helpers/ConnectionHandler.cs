@@ -1,11 +1,11 @@
-﻿namespace Frends.Redis.DeleteKey.Helpers;
-
-using Azure.Identity;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Definitions;
+using Azure.Identity;
+using Frends.Redis.DeleteKey.Definitions;
 using StackExchange.Redis;
+
+namespace Frends.Redis.DeleteKey.Helpers;
 
 internal static class ConnectionHandler
 {
@@ -15,7 +15,7 @@ internal static class ConnectionHandler
         {
             ConnectionMethod.SimpleConnectionString => await SimpleConnection(connection.ConnectionString),
             ConnectionMethod.MicrosoftEntraId => await MicrosoftEntraIdConnection(connection.ConnectionString),
-            _ => throw new ArgumentOutOfRangeException(nameof(connection), connection.ConnectionMethod, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(connection), connection.ConnectionMethod, null),
         };
     }
 
