@@ -115,7 +115,7 @@ public class IntegrationTests
 
         // Assert
         var savedValue = await db.StringGetAsync(input.Key);
-        Assert.ThrowsAsync<Exception>(action);
+        Assert.ThrowsAsync<RedisConnectionException>(action);
         Assert.IsFalse(savedValue.HasValue);
     }
 
@@ -146,7 +146,7 @@ public class IntegrationTests
         AsyncTestDelegate action = async () => await Redis.KeyExists(input, connection, options, CancellationToken.None);
 
         // Assert
-        Assert.ThrowsAsync<Exception>(action);
+        Assert.ThrowsAsync<RedisConnectionException>(action);
     }
 
     [Test]
