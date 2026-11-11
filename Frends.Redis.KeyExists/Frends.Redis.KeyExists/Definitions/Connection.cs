@@ -20,5 +20,6 @@ public class Connection
     /// </summary>
     /// <example>127.0.0.1:6379</example>
     [DisplayFormat(DataFormatString = "Text")]
+    [Required]
     public string ConnectionString { get; set; }
 }

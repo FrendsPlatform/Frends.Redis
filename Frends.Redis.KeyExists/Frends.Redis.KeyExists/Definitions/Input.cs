@@ -12,5 +12,6 @@ public class Input
     /// </summary>
     /// <example>Foo</example>
     [DisplayFormat(DataFormatString = "Text")]
+    [Required]
     public string Key { get; set; }
 }

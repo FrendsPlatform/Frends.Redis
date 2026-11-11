@@ -1,4 +1,4 @@
-namespace Frends.Redis.KeyExists;
+﻿namespace Frends.Redis.KeyExists;
 
 using System;
 using System.ComponentModel;
@@ -30,6 +30,7 @@ public static class Redis
         try
         {
             cancellationToken.ThrowIfCancellationRequested();
+            ValidationHandler.Run(input, connection);
             await using var redis = await ConnectionHandler.GetConnectionAsync(connection).ConfigureAwait(false);
             var db = redis.GetDatabase();
             var exists = await db.KeyExistsAsync(input.Key);
